@@ -1,6 +1,7 @@
 <div align="center">
 <img src="logo.png" width="180">  
 </div>
+
 # CodeRedProject-FullStack
 
  Platform to Connect Potential Agents for Hiring: Designing a platform to connect agents and streamline hiring processes.
