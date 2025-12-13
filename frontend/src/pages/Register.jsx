@@ -33,28 +33,31 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
-                <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-slate-900">
+        <div className="min-h-screen flex items-center justify-center bg-[var(--color-background)] py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full space-y-8 bg-[var(--color-background)] p-8 rounded-2xl shadow-xl border border-[var(--color-secondary)]/20 relative overflow-hidden">
+                <div className="relative">
+                    <h2 className="mt-2 text-center text-4xl font-bold text-[var(--color-primary-dark)] font-serif tracking-tight">
                         Create your account
                     </h2>
-                    <div className="mt-6 flex justify-center">
-                        <div className="bg-slate-100 p-1 rounded-lg inline-flex">
+
+                    <div className="mt-8 flex justify-center">
+                        <div className="bg-[var(--color-secondary)]/30 p-1.5 rounded-full inline-flex relative w-full max-w-xs">
                             <button
+                                type="button"
                                 onClick={() => setRole('employer')}
-                                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${role === 'employer'
-                                        ? 'bg-white text-primary shadow-sm'
-                                        : 'text-slate-500 hover:text-slate-900'
+                                className={`flex-1 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${role === 'employer'
+                                        ? 'bg-[var(--color-primary)] text-white shadow-md'
+                                        : 'text-[var(--color-primary-dark)] hover:bg-[var(--color-secondary)]/20'
                                     }`}
                             >
                                 Employer
                             </button>
                             <button
+                                type="button"
                                 onClick={() => setRole('agent')}
-                                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${role === 'agent'
-                                        ? 'bg-white text-primary shadow-sm'
-                                        : 'text-slate-500 hover:text-slate-900'
+                                className={`flex-1 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${role === 'agent'
+                                        ? 'bg-[var(--color-primary)] text-white shadow-md'
+                                        : 'text-[var(--color-primary-dark)] hover:bg-[var(--color-secondary)]/20'
                                     }`}
                             >
                                 Agent
@@ -62,8 +65,9 @@ const Register = () => {
                         </div>
                     </div>
                 </div>
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-                    <div className="rounded-md shadow-sm -space-y-px">
+
+                <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+                    <div className="space-y-4">
                         <div>
                             <label htmlFor="name" className="sr-only">
                                 Full Name
@@ -75,7 +79,7 @@ const Register = () => {
                                 required
                                 value={formData.name}
                                 onChange={handleChange}
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-500 text-slate-900 rounded-t-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                className="appearance-none block w-full px-6 py-3.5 border border-[var(--color-primary)]/30 placeholder-[var(--color-primary)]/50 text-[var(--color-primary-dark)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent bg-white/50 backdrop-blur-sm transition-all shadow-sm"
                                 placeholder="Full Name"
                             />
                         </div>
@@ -91,7 +95,7 @@ const Register = () => {
                                 required
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-500 text-slate-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                className="appearance-none block w-full px-6 py-3.5 border border-[var(--color-primary)]/30 placeholder-[var(--color-primary)]/50 text-[var(--color-primary-dark)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent bg-white/50 backdrop-blur-sm transition-all shadow-sm"
                                 placeholder="Email address"
                             />
                         </div>
@@ -106,7 +110,7 @@ const Register = () => {
                                 required
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-500 text-slate-900 focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                className="appearance-none block w-full px-6 py-3.5 border border-[var(--color-primary)]/30 placeholder-[var(--color-primary)]/50 text-[var(--color-primary-dark)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent bg-white/50 backdrop-blur-sm transition-all shadow-sm"
                                 placeholder="Password"
                             />
                         </div>
@@ -121,7 +125,7 @@ const Register = () => {
                                 required
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
-                                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-500 text-slate-900 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
+                                className="appearance-none block w-full px-6 py-3.5 border border-[var(--color-primary)]/30 placeholder-[var(--color-primary)]/50 text-[var(--color-primary-dark)] rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent bg-white/50 backdrop-blur-sm transition-all shadow-sm"
                                 placeholder="Confirm Password"
                             />
                         </div>
@@ -130,16 +134,17 @@ const Register = () => {
                     <div>
                         <button
                             type="submit"
-                            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-light focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                            className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-full text-white bg-[var(--color-primary-dark)] hover:bg-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)] shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
                         >
                             Sign up as {role === 'employer' ? 'Employer' : 'Agent'}
                         </button>
                     </div>
                 </form>
-                <div className="text-center">
-                    <p className="text-sm text-slate-600">
+
+                <div className="text-center mt-6">
+                    <p className="text-sm text-[var(--color-primary-dark)]">
                         Already have an account?{' '}
-                        <Link to="/login" className="font-medium text-primary hover:text-primary-light">
+                        <Link to="/login" className="font-bold text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] transition-colors">
                             Log in
                         </Link>
                     </p>
