@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #31572c;
+  /* Dark Green */
+  --color-primary-light: #4f774a;
+  --color-primary-dark: #1a3315;
+
+  --color-secondary: #90a955;
+  /* Olive/Sage */
+  --color-secondary-light: #b5c985;
+
+  --color-accent: #bc4749;
+  /* Red */
+  --color-accent-hover: #a33638;
+
+  --color-background: #fefae0;
+  /* Cream */
+  --color-surface: #ffffff;
+
+  --font-sans: 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--color-background)] text-slate-900 antialiased;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-2.5 rounded-full font-medium transition-all duration-200 shadow-sm hover:shadow-md active:scale-95;
+  }
+
+  .btn-primary {
+    @apply bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-light)];
+  }
+
+  .btn-secondary {
+    @apply bg-[var(--color-secondary)] text-white hover:bg-[var(--color-secondary-light)];
+  }
+
+  .btn-accent {
+    @apply bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-hover)];
+  }
+
+  .btn-outline {
+    @apply border-2 border-[var(--color-primary)] text-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white bg-transparent;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 focus:border-[var(--color-primary)] bg-white;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow duration-200;
+  }
+}
