@@ -1,9 +1,17 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Menu, X, ArrowUpRight, LogOut, User } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
 
     return (
         <nav className="bg-[var(--color-background)] sticky top-0 z-50 py-4">
@@ -41,13 +49,33 @@ const Navbar = () => {
 
                     {/* Desktop Right Actions */}
                     <div className="hidden md:flex items-center space-x-4">
-                        <Link to="/login" className="text-sm font-bold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors px-4 py-2">
-                            Log in
-                        </Link>
-                        <Link to="/register" className="group bg-[var(--color-primary-dark)] text-white rounded-full px-6 py-2.5 flex items-center text-sm font-bold hover:bg-[var(--color-primary)] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                            Sign up
-                            <ArrowUpRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                        </Link>
+                        {user ? (
+                            <div className="flex items-center gap-4">
+                                <span className="text-sm font-semibold text-[var(--color-primary-dark)] flex items-center gap-2">
+                                    <div className="bg-[var(--color-secondary)]/20 p-1 rounded-full">
+                                        <User className="h-4 w-4 text-[var(--color-primary)]" />
+                                    </div>
+                                    {user.name}
+                                </span>
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-sm font-bold text-[var(--color-primary-dark)] hover:text-red-600 transition-colors px-4 py-2 flex items-center gap-2"
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                    Sign out
+                                </button>
+                            </div>
+                        ) : (
+                            <>
+                                <Link to="/login" className="text-sm font-bold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors px-4 py-2">
+                                    Log in
+                                </Link>
+                                <Link to="/register" className="group bg-[var(--color-primary-dark)] text-white rounded-full px-6 py-2.5 flex items-center text-sm font-bold hover:bg-[var(--color-primary)] transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                                    Sign up
+                                    <ArrowUpRight className="ml-2 h-4 w-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                </Link>
+                            </>
+                        )}
                     </div>
 
                     {/* Mobile menu button */}
@@ -81,12 +109,30 @@ const Navbar = () => {
                         </Link>
                     </div>
                     <div className="pt-4 pb-6 border-t border-[var(--color-secondary)]/10 px-4 space-y-3">
-                        <Link to="/login" className="block w-full text-center px-4 py-3 rounded-full text-base font-bold text-[var(--color-primary-dark)] border-2 border-[var(--color-primary-dark)] hover:bg-[var(--color-primary-dark)] hover:text-white transition-colors">
-                            Log in
-                        </Link>
-                        <Link to="/register" className="block w-full text-center px-4 py-3 rounded-full text-base font-bold text-white bg-[var(--color-primary-dark)] hover:bg-[var(--color-primary)] shadow-md transition-colors">
-                            Sign up
-                        </Link>
+                        {user ? (
+                            <>
+                                <div className="px-4 py-2 text-base font-bold text-[var(--color-primary-dark)] flex items-center gap-2">
+                                    <User className="h-5 w-5" />
+                                    {user.name}
+                                </div>
+                                <button
+                                    onClick={() => { handleLogout(); setIsOpen(false); }}
+                                    className="block w-full text-center px-4 py-3 rounded-full text-base font-bold text-white bg-red-600 hover:bg-red-700 shadow-md transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <LogOut className="h-5 w-5" />
+                                    Sign out
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/login" className="block w-full text-center px-4 py-3 rounded-full text-base font-bold text-[var(--color-primary-dark)] border-2 border-[var(--color-primary-dark)] hover:bg-[var(--color-primary-dark)] hover:text-white transition-colors">
+                                    Log in
+                                </Link>
+                                <Link to="/register" className="block w-full text-center px-4 py-3 rounded-full text-base font-bold text-white bg-[var(--color-primary-dark)] hover:bg-[var(--color-primary)] shadow-md transition-colors">
+                                    Sign up
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             )}

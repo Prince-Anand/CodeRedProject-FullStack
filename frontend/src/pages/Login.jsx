@@ -9,11 +9,17 @@ const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Simulate login
-        login({ email, role, name: 'Test User' });
-        navigate(role === 'employer' ? '/dashboard' : '/agent-dashboard');
+        setError('');
+        const success = await login({ email, password, role });
+        if (success) {
+            navigate(role === 'employer' ? '/dashboard' : '/agent-dashboard');
+        } else {
+            setError('Invalid email or password');
+        }
     };
 
     return (
@@ -33,8 +39,8 @@ const Login = () => {
                                 type="button"
                                 onClick={() => setRole('employer')}
                                 className={`flex-1 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${role === 'employer'
-                                        ? 'bg-[var(--color-primary)] text-white shadow-md'
-                                        : 'text-[var(--color-primary-dark)] hover:bg-[var(--color-secondary)]/20'
+                                    ? 'bg-[var(--color-primary)] text-white shadow-md'
+                                    : 'text-[var(--color-primary-dark)] hover:bg-[var(--color-secondary)]/20'
                                     }`}
                             >
                                 Employer
@@ -43,8 +49,8 @@ const Login = () => {
                                 type="button"
                                 onClick={() => setRole('agent')}
                                 className={`flex-1 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${role === 'agent'
-                                        ? 'bg-[var(--color-primary)] text-white shadow-md'
-                                        : 'text-[var(--color-primary-dark)] hover:bg-[var(--color-secondary)]/20'
+                                    ? 'bg-[var(--color-primary)] text-white shadow-md'
+                                    : 'text-[var(--color-primary-dark)] hover:bg-[var(--color-secondary)]/20'
                                     }`}
                             >
                                 Agent
@@ -118,6 +124,12 @@ const Login = () => {
                         </button>
                     </div>
                 </form>
+
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4 mx-2" role="alert">
+                        <span className="block sm:inline">{error}</span>
+                    </div>
+                )}
 
                 <div className="text-center mt-6">
                     <p className="text-sm text-[var(--color-primary-dark)]">

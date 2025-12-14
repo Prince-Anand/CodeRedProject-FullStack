@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
+import ProtectedRoute from './components/layout/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AgentSearch from './pages/AgentSearch';
@@ -28,10 +29,26 @@ function App() {
               <Route path="/agents" element={<AgentSearch />} />
               <Route path="/agent/:id" element={<AgentProfile />} />
               <Route path="/jobs" element={<JobBoard />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/agent-dashboard" element={<AgentDashboard />} />
-              <Route path="/chat" element={<Chat />} />
-              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/dashboard" element={
+                <ProtectedRoute allowedRoles={['employer', 'admin']}>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/agent-dashboard" element={
+                <ProtectedRoute allowedRoles={['agent', 'admin']}>
+                  <AgentDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/chat" element={
+                <ProtectedRoute>
+                  <Chat />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin" element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
               <Route path="/support" element={<Support />} />
             </Routes>
           </main>
