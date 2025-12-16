@@ -18,3 +18,8 @@
 - `npm run dev`
 4. Access the application at `http://localhost:port` (port will be visible in terminal) - `localhost:port` e.g. `http://localhost:5173`
 
+5. Run the backend server
+- `cd backend`
+- `npm install`
+- `npm run dev`
+6. Access the backend at `http://localhost:5000`
