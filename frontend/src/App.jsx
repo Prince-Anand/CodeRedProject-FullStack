@@ -13,6 +13,9 @@ import Dashboard from './pages/Dashboard';
 import AgentDashboard from './pages/AgentDashboard';
 import Chat from './pages/Chat';
 import AdminDashboard from './pages/AdminDashboard';
+import ManageProfile from './pages/ManageProfile';
+import PostJob from './pages/PostJob';
+import JobApplicants from './pages/JobApplicants';
 import Support from './pages/Support';
 
 function App() {
@@ -47,6 +50,21 @@ function App() {
               <Route path="/admin" element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <ManageProfile />
+                </ProtectedRoute>
+              } />
+              <Route path="/post-job" element={
+                <ProtectedRoute allowedRoles={['employer', 'admin']}>
+                  <PostJob />
+                </ProtectedRoute>
+              } />
+              <Route path="/job/:id/applicants" element={
+                <ProtectedRoute allowedRoles={['employer', 'admin']}>
+                  <JobApplicants />
                 </ProtectedRoute>
               } />
               <Route path="/support" element={<Support />} />

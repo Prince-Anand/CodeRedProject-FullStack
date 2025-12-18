@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const AuthContext = createContext();
 
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (userData) => {
         try {
-            const res = await fetch('http://localhost:5000/login', {
+            const res = await fetch('http://localhost:5000/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData),
@@ -19,16 +19,16 @@ export const AuthProvider = ({ children }) => {
 
             setUser(data.user);
             localStorage.setItem('token', data.token);
-            return true;
+            return data.user; // Return user to help redirect
         } catch (err) {
             console.error(err);
-            return false;
+            throw err; // Throw error to be caught by component
         }
     };
 
     const register = async (userData) => {
         try {
-            const res = await fetch('http://localhost:5000/register', {
+            const res = await fetch('http://localhost:5000/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(userData),
@@ -41,13 +41,13 @@ export const AuthProvider = ({ children }) => {
             return true;
         } catch (err) {
             console.error(err);
-            return false;
+            throw err;
         }
     };
 
     const logout = async () => {
         try {
-            await fetch('http://localhost:5000/signout', { method: 'POST' });
+            await fetch('http://localhost:5000/api/auth/signout', { method: 'POST' });
         } catch (err) {
             console.error('Logout error:', err);
         }
@@ -56,9 +56,35 @@ export const AuthProvider = ({ children }) => {
     };
 
     // Check if user is logged in on mount
-    // useEffect(() => {
-    //    checkAuth();
-    // }, []);
+    const checkAuth = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        try {
+            const res = await fetch('http://localhost:5000/api/auth/me', {
+                method: 'GET',
+                headers: {
+                    'x-auth-token': token,
+                    'Content-Type': 'application/json'
+                },
+            });
+            const data = await res.json();
+            if (res.ok) {
+                setUser(data);
+            } else {
+                localStorage.removeItem('token');
+                setUser(null);
+            }
+        } catch (err) {
+            console.error('Auth check failed:', err);
+            localStorage.removeItem('token');
+            setUser(null);
+        }
+    };
+
+    useEffect(() => {
+        checkAuth();
+    }, []);
 
     return (
         <AuthContext.Provider value={{ user, login, logout, register }}>

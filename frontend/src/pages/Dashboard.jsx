@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LayoutDashboard, Briefcase, MessageSquare, Settings, LogOut, Plus, Users, Clock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -8,7 +8,25 @@ const Dashboard = () => {
     const { user, logout } = useAuth();
     const [activeTab, setActiveTab] = useState('overview');
 
-    const myJobs = jobs.filter(job => job.company === 'Tech Corp'); // Mock filter
+    const [myJobs, setMyJobs] = useState([]);
+
+    useEffect(() => {
+        const fetchMyJobs = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('http://localhost:5000/api/jobs/my', {
+                    headers: { 'x-auth-token': token }
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    setMyJobs(data);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchMyJobs();
+    }, []);
 
     return (
         <div className="min-h-screen bg-[var(--color-background)] flex">
@@ -21,8 +39,8 @@ const Dashboard = () => {
                     <button
                         onClick={() => setActiveTab('overview')}
                         className={`w-full flex items-center px-6 py-3 text-sm font-medium transition-colors ${activeTab === 'overview'
-                                ? 'text-[var(--color-primary)] bg-[var(--color-secondary)]/10 border-r-4 border-[var(--color-primary)]'
-                                : 'text-slate-600 hover:bg-slate-50 hover:text-[var(--color-primary)]'
+                            ? 'text-[var(--color-primary)] bg-[var(--color-secondary)]/10 border-r-4 border-[var(--color-primary)]'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-[var(--color-primary)]'
                             }`}
                     >
                         <LayoutDashboard className="h-5 w-5 mr-3" />
@@ -31,8 +49,8 @@ const Dashboard = () => {
                     <button
                         onClick={() => setActiveTab('jobs')}
                         className={`w-full flex items-center px-6 py-3 text-sm font-medium transition-colors ${activeTab === 'jobs'
-                                ? 'text-[var(--color-primary)] bg-[var(--color-secondary)]/10 border-r-4 border-[var(--color-primary)]'
-                                : 'text-slate-600 hover:bg-slate-50 hover:text-[var(--color-primary)]'
+                            ? 'text-[var(--color-primary)] bg-[var(--color-secondary)]/10 border-r-4 border-[var(--color-primary)]'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-[var(--color-primary)]'
                             }`}
                     >
                         <Briefcase className="h-5 w-5 mr-3" />
@@ -84,7 +102,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-slate-500">Active Jobs</p>
-                                    <p className="text-2xl font-bold text-[var(--color-primary)]">12</p>
+                                    <p className="text-2xl font-bold text-[var(--color-primary)]">{myJobs.length}</p>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +113,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-slate-500">Total Applicants</p>
-                                    <p className="text-2xl font-bold text-[var(--color-primary)]">48</p>
+                                    <p className="text-2xl font-bold text-[var(--color-primary)]">0</p>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +124,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-sm font-medium text-slate-500">Unread Messages</p>
-                                    <p className="text-2xl font-bold text-[var(--color-primary)]">5</p>
+                                    <p className="text-2xl font-bold text-[var(--color-primary)]">0</p>
                                 </div>
                             </div>
                         </div>
@@ -119,14 +137,14 @@ const Dashboard = () => {
                             <button className="text-sm text-[var(--color-secondary)] hover:text-[var(--color-primary)] font-medium">View All</button>
                         </div>
                         <div className="divide-y divide-slate-100">
-                            {myJobs.map((job) => (
-                                <div key={job.id} className="p-6 hover:bg-slate-50 transition-colors">
+                            {myJobs.length === 0 ? <p className="p-6 text-slate-500">No jobs posted yet.</p> : myJobs.map((job) => (
+                                <div key={job._id} className="p-6 hover:bg-slate-50 transition-colors">
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <h4 className="text-lg font-semibold text-[var(--color-primary)]">{job.title}</h4>
                                             <div className="flex items-center mt-1 text-sm text-slate-500">
                                                 <Clock className="h-4 w-4 mr-1" />
-                                                Posted {job.posted}
+                                                Posted {new Date(job.posted).toLocaleDateString()}
                                                 <span className="mx-2">•</span>
                                                 <span className="px-2 py-0.5 rounded-full bg-[var(--color-background)] text-[var(--color-primary)] border border-[var(--color-secondary)]/20 text-xs font-medium">
                                                     {job.type}
@@ -135,10 +153,10 @@ const Dashboard = () => {
                                         </div>
                                         <div className="flex items-center space-x-4">
                                             <div className="text-right">
-                                                <p className="text-2xl font-bold text-[var(--color-primary)]">8</p>
+                                                <p className="text-2xl font-bold text-[var(--color-primary)]">0</p>
                                                 <p className="text-xs text-slate-500">Applicants</p>
                                             </div>
-                                            <button className="btn btn-outline text-sm px-4 py-2">Manage</button>
+                                            <Link to={`/job/${job._id}/applicants`} className="btn btn-outline text-sm px-4 py-2">Manage</Link>
                                         </div>
                                     </div>
                                 </div>

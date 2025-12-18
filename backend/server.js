@@ -17,10 +17,14 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.error('MongoDB Connection Error:', err));
 
 // Routes
-app.use('/', require('./routes/auth'));
-app.use('/agents', require('./routes/agents'));
-app.use('/jobs', require('./routes/jobs'));
-app.use('/chats', require('./routes/chats')); // Placeholder if needed
+app.use('/uploads', express.static('uploads'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/profiles', require('./routes/profiles'));
+app.use('/api/agents', require('./routes/agents'));
+app.use('/api/jobs', require('./routes/jobs'));
+app.use('/api/applications', require('./routes/applications'));
+app.use('/api/payment', require('./routes/payment'));
+// app.use('/api/chats', require('./routes/chats'));
 
 app.get('/', (req, res) => {
     res.send('CodeRed Backend API is Running');

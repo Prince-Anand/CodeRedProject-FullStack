@@ -32,13 +32,13 @@ const Register = () => {
             return;
         }
 
-        const success = await register({ ...formData, role }); // Actually using login from context which was assigned to register if we followed that path, but wait, I added 'register' to context.
-        // Wait, in Register.jsx line 14: const { login } = useAuth();
-        // I need to change this to const { register } = useAuth();
-        if (success) {
-            navigate(role === 'employer' ? '/dashboard' : '/agent-dashboard');
-        } else {
-            setError('Registration failed. Try again.');
+        try {
+            const success = await register({ ...formData, role });
+            if (success) {
+                navigate(role === 'employer' ? '/dashboard' : '/agent-dashboard');
+            }
+        } catch (err) {
+            setError(err.message || 'Registration failed. Try again.');
         }
     };
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Search, MapPin, DollarSign, Clock } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 // import { jobs } from '../data/jobs';
 
 const JobBoard = () => {
@@ -10,7 +11,7 @@ const JobBoard = () => {
     useEffect(() => {
         const fetchJobs = async () => {
             try {
-                const res = await fetch('http://localhost:5000/jobs');
+                const res = await fetch('http://localhost:5000/api/jobs');
                 const data = await res.json();
                 setJobs(data);
                 setLoading(false);
@@ -26,6 +27,44 @@ const JobBoard = () => {
         job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         job.company.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const { user } = useAuth();
+    const [applying, setApplying] = useState(null);
+
+    const handleApply = async (jobId) => {
+        if (!user) {
+            alert('Please login to apply');
+            return;
+        }
+        if (user.role !== 'agent') {
+            alert('Only agents can apply for jobs');
+            return;
+        }
+
+        setApplying(jobId);
+        try {
+            const token = localStorage.getItem('token');
+            const res = await fetch(`http://localhost:5000/api/applications/${jobId}/apply`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-auth-token': token
+                }
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                alert('Application submitted successfully!');
+            } else {
+                alert(data.msg || 'Application failed');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error applying for job');
+        } finally {
+            setApplying(null);
+        }
+    };
 
     return (
         <div className="bg-[var(--color-background)] min-h-screen py-8">
@@ -52,7 +91,7 @@ const JobBoard = () => {
                     {loading ? <p className="text-center text-[var(--color-primary)]">Loading jobs...</p> : (
                         <>
                             {filteredJobs.map((job) => (
-                                <div key={job.id} className="card p-6 group hover:border-[var(--color-secondary)]/50 transition-all">
+                                <div key={job.id || job._id} className="card p-6 group hover:border-[var(--color-secondary)]/50 transition-all">
                                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                                         <div className="flex-1">
                                             <div className="flex items-center justify-between md:justify-start">
@@ -73,7 +112,8 @@ const JobBoard = () => {
                                                 </div>
                                                 <div className="flex items-center">
                                                     <Clock className="flex-shrink-0 mr-1.5 h-4 w-4 text-slate-400" />
-                                                    {job.posted}
+                                                    {/* job.posted is now a Date string in backend, simple render for now */}
+                                                    {new Date(job.posted).toLocaleDateString()}
                                                 </div>
                                             </div>
                                         </div>
@@ -81,7 +121,13 @@ const JobBoard = () => {
                                             <span className="hidden md:inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-[var(--color-background)] text-[var(--color-primary)] border border-[var(--color-secondary)]/20">
                                                 {job.type}
                                             </span>
-                                            <button className="btn btn-primary w-full md:w-auto shadow-sm">Apply Now</button>
+                                            <button
+                                                onClick={() => handleApply(job._id)}
+                                                disabled={applying === job._id}
+                                                className="btn btn-primary w-full md:w-auto shadow-sm disabled:opacity-50"
+                                            >
+                                                {applying === job._id ? 'Applying...' : 'Apply Now'}
+                                            </button>
                                         </div>
                                     </div>
                                     <div className="mt-4 pt-4 border-t border-slate-100">
