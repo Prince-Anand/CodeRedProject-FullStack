@@ -29,14 +29,45 @@ const Navbar = () => {
                     {/* Desktop Center Pill Navigation */}
                     <div className="hidden md:flex items-center justify-center flex-1 px-8">
                         <div className="bg-[var(--color-secondary)]/15 backdrop-blur-sm rounded-full px-8 py-2.5 flex items-center space-x-6 shadow-sm border border-[var(--color-secondary)]/10">
-                            <Link to="/agents" className="text-sm font-semibold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors">
-                                Find Agents
-                            </Link>
-                            <span className="text-[var(--color-secondary)]/40">•</span>
-                            <Link to="/jobs" className="text-sm font-semibold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors">
-                                Find Jobs
-                            </Link>
-                            <span className="text-[var(--color-secondary)]/40">•</span>
+
+                            {user ? (
+                                <>
+                                    <Link to={user.role === 'agent' ? '/agent-dashboard' : '/dashboard'} className="text-sm font-semibold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors">
+                                        Dashboard
+                                    </Link>
+                                    <span className="text-[var(--color-secondary)]/40">•</span>
+
+                                    {user.role === 'employer' && (
+                                        <>
+                                            <Link to="/agents" className="text-sm font-semibold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors">
+                                                Find Agents
+                                            </Link>
+                                            <span className="text-[var(--color-secondary)]/40">•</span>
+                                        </>
+                                    )}
+
+                                    {user.role === 'agent' && (
+                                        <>
+                                            <Link to="/jobs" className="text-sm font-semibold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors">
+                                                Find Jobs
+                                            </Link>
+                                            <span className="text-[var(--color-secondary)]/40">•</span>
+                                        </>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/agents" className="text-sm font-semibold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors">
+                                        Find Agents
+                                    </Link>
+                                    <span className="text-[var(--color-secondary)]/40">•</span>
+                                    <Link to="/jobs" className="text-sm font-semibold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors">
+                                        Find Jobs
+                                    </Link>
+                                    <span className="text-[var(--color-secondary)]/40">•</span>
+                                </>
+                            )}
+
                             <Link to="/how-it-works" className="text-sm font-semibold text-[var(--color-primary-dark)] hover:text-[var(--color-primary)] transition-colors">
                                 How it Works
                             </Link>
@@ -51,12 +82,12 @@ const Navbar = () => {
                     <div className="hidden md:flex items-center space-x-4">
                         {user ? (
                             <div className="flex items-center gap-4">
-                                <span className="text-sm font-semibold text-[var(--color-primary-dark)] flex items-center gap-2">
+                                <Link to="/profile" className="text-sm font-semibold text-[var(--color-primary-dark)] flex items-center gap-2 hover:text-[var(--color-primary)] transition-colors">
                                     <div className="bg-[var(--color-secondary)]/20 p-1 rounded-full">
                                         <User className="h-4 w-4 text-[var(--color-primary)]" />
                                     </div>
                                     {user.name}
-                                </span>
+                                </Link>
                                 <button
                                     onClick={handleLogout}
                                     className="text-sm font-bold text-[var(--color-primary-dark)] hover:text-red-600 transition-colors px-4 py-2 flex items-center gap-2"
@@ -111,10 +142,10 @@ const Navbar = () => {
                     <div className="pt-4 pb-6 border-t border-[var(--color-secondary)]/10 px-4 space-y-3">
                         {user ? (
                             <>
-                                <div className="px-4 py-2 text-base font-bold text-[var(--color-primary-dark)] flex items-center gap-2">
+                                <Link to="/profile" className="px-4 py-2 text-base font-bold text-[var(--color-primary-dark)] flex items-center gap-2">
                                     <User className="h-5 w-5" />
                                     {user.name}
-                                </div>
+                                </Link>
                                 <button
                                     onClick={() => { handleLogout(); setIsOpen(false); }}
                                     className="block w-full text-center px-4 py-3 rounded-full text-base font-bold text-white bg-red-600 hover:bg-red-700 shadow-md transition-colors flex items-center justify-center gap-2"
