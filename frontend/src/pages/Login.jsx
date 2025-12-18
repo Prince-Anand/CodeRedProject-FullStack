@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
-    const [role, setRole] = useState('employer'); // 'employer' or 'agent'
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useAuth();
@@ -14,11 +13,13 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-        const success = await login({ email, password, role });
-        if (success) {
-            navigate(role === 'employer' ? '/dashboard' : '/agent-dashboard');
-        } else {
-            setError('Invalid email or password');
+        try {
+            const user = await login({ email, password });
+            if (user) {
+                navigate(user.role === 'employer' ? '/dashboard' : '/agent-dashboard');
+            }
+        } catch (err) {
+            setError(err.message || 'Invalid email or password');
         }
     };
 
@@ -31,32 +32,6 @@ const Login = () => {
                     <h2 className="mt-2 text-center text-4xl font-bold text-[var(--color-primary-dark)] font-serif tracking-tight">
                         Sign in to your account
                     </h2>
-
-                    {/* Role Toggle */}
-                    <div className="mt-8 flex justify-center">
-                        <div className="bg-[var(--color-secondary)]/30 p-1.5 rounded-full inline-flex relative w-full max-w-xs">
-                            <button
-                                type="button"
-                                onClick={() => setRole('employer')}
-                                className={`flex-1 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${role === 'employer'
-                                    ? 'bg-[var(--color-primary)] text-white shadow-md'
-                                    : 'text-[var(--color-primary-dark)] hover:bg-[var(--color-secondary)]/20'
-                                    }`}
-                            >
-                                Employer
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => setRole('agent')}
-                                className={`flex-1 px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 ${role === 'agent'
-                                    ? 'bg-[var(--color-primary)] text-white shadow-md'
-                                    : 'text-[var(--color-primary-dark)] hover:bg-[var(--color-secondary)]/20'
-                                    }`}
-                            >
-                                Agent
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -120,7 +95,7 @@ const Login = () => {
                             type="submit"
                             className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-full text-white bg-[var(--color-primary-dark)] hover:bg-[var(--color-primary)] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--color-primary)] shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5"
                         >
-                            Sign in as {role === 'employer' ? 'Employer' : 'Agent'}
+                            Sign in
                         </button>
                     </div>
                 </form>
