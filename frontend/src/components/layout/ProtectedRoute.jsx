@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     const location = useLocation();
 
     // If implementing a loading state in AuthContext (recommended), handle it here
-    // if (loading) return <div>Loading...</div>;
+    if (loading) return <div className="flex justify-center items-center h-screen text-[var(--color-primary)]">Loading...</div>;
 
     if (!user) {
         return <Navigate to="/login" state={{ from: location }} replace />;

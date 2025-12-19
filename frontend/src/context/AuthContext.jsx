@@ -6,6 +6,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null); // { name, email, role: 'employer' | 'agent' }
+    const [loading, setLoading] = useState(true);
 
     const login = async (userData) => {
         try {
@@ -58,7 +59,10 @@ export const AuthProvider = ({ children }) => {
     // Check if user is logged in on mount
     const checkAuth = async () => {
         const token = localStorage.getItem('token');
-        if (!token) return;
+        if (!token) {
+            setLoading(false);
+            return;
+        }
 
         try {
             const res = await fetch('http://localhost:5000/api/auth/me', {
@@ -79,6 +83,8 @@ export const AuthProvider = ({ children }) => {
             console.error('Auth check failed:', err);
             localStorage.removeItem('token');
             setUser(null);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -87,7 +93,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register }}>
+        <AuthContext.Provider value={{ user, loading, login, logout, register }}>
             {children}
         </AuthContext.Provider>
     );

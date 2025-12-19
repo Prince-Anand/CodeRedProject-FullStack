@@ -25,13 +25,13 @@ const AgentSearch = () => {
     }, []);
 
     const filteredAgents = agents.filter((agent) => {
-        const matchesSearch = agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            agent.role.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = agent.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            agent.role?.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesSkill = selectedSkill ? agent.skills.includes(selectedSkill) : true;
         return matchesSearch && matchesSkill;
     });
 
-    const allSkills = [...new Set(agents.flatMap(agent => agent.skills))];
+    const allSkills = [...new Set(agents.flatMap(agent => agent.skills || []))];
 
     return (
         <div className="bg-[var(--color-background)] min-h-screen py-8">
@@ -106,7 +106,7 @@ const AgentSearch = () => {
                                 </div>
                                 <div className="bg-[var(--color-background)]/50 px-6 py-4 flex items-center justify-between border-t border-slate-100">
                                     <span className="text-lg font-bold text-[var(--color-primary)]">${agent.hourlyRate}/hr</span>
-                                    <Link to={`/agent/${agent.id}`} className="text-[var(--color-secondary)] hover:text-[var(--color-primary)] font-medium text-sm transition-colors">
+                                    <Link to={`/agent/${agent.id || agent._id}`} className="text-[var(--color-secondary)] hover:text-[var(--color-primary)] font-medium text-sm transition-colors">
                                         View Profile &rarr;
                                     </Link>
                                 </div>
