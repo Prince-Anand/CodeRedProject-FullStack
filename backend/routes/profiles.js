@@ -56,6 +56,11 @@ router.post('/update', auth, async (req, res) => {
         // Prevent updating user field
         delete profileData.user;
 
+        // Sync name change to User model if provided
+        if (profileData.name) {
+            await User.findByIdAndUpdate(req.user.id, { name: profileData.name });
+        }
+
         let profile;
         if (role === 'agent') {
             profile = await Agent.findOneAndUpdate(
