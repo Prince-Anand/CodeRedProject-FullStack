@@ -74,10 +74,11 @@ const JobApplicants = () => {
             const order = await orderRes.json();
 
             const options = {
-                key: 'rzp_test_PLACEHOLDER', // Expecting placeholder
+                key: 'rzp_test_RuIxzwGZv4Rh9h', // Razorpay Key ID
                 amount: order.amount,
                 currency: "INR",
-                name: "AgentHire",
+                name: "Agnt.",
+                image: "/border-favicon.png",
                 description: `Hiring ${app.agent.name}`,
                 order_id: order.id,
                 handler: async function (response) {
@@ -178,6 +179,11 @@ const JobApplicants = () => {
                                                 </span>
                                             )}
                                         </div>
+                                    </div>
+                                    <div className="mt-2 flex justify-end">
+                                        <Link to={`/agent/${app.agent._id}`} className="text-sm text-[var(--color-primary)] hover:underline flex items-center">
+                                            View Profile
+                                        </Link>
                                     </div>
                                     {app.coverLetter && (
                                         <div className="mt-2 ml-16 text-sm text-gray-600 bg-gray-50 p-3 rounded">
