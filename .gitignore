@@ -2,4 +2,3 @@ node_modules/
 .env
 seed.js
 api_list.md
-backend/uploads/
