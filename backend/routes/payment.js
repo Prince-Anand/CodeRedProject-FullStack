@@ -6,8 +6,8 @@ const auth = require('../middleware/auth');
 const Application = require('../models/Application');
 
 const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_PLACEHOLDER',
-    key_secret: process.env.RAZORPAY_KEY_SECRET || 'secret_PLACEHOLDER'
+    key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_RuIxzwGZv4Rh9h',
+    key_secret: process.env.RAZORPAY_KEY_SECRET || 'WqzJnD4N8xYWFAWXD9NMfVa6'
 });
 
 // Create Order
@@ -37,7 +37,7 @@ router.post('/verify', auth, async (req, res) => {
         const body = razorpay_order_id + "|" + razorpay_payment_id;
 
         const expectedSignature = crypto
-            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'secret_PLACEHOLDER')
+            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET || 'WqzJnD4N8xYWFAWXD9NMfVa6')
             .update(body.toString())
             .digest('hex');
 
